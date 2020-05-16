@@ -74,6 +74,7 @@ $(async function() {
 
 	$navLogin.on('click', function() {
 		// Show the Login and Create Account Forms
+		console.log('this sucks');
 		$loginForm.slideToggle();
 		$createAccountForm.slideToggle();
 		$allStoriesList.toggle();
@@ -103,8 +104,9 @@ $(async function() {
 		hideElements();
 		if (currentUser) {
 			$('#favorited-articles').slideToggle();
-			// $allStoriesList.hide();
+			$allStoriesList.hide();
 			$('#favorited-articles').show();
+			$('#favorited-articles').empty();
 			for (story of currentUser.favorites) {
 				$('#favorited-articles').append(generateStoryHTML(story));
 			}
@@ -113,8 +115,10 @@ $(async function() {
 
 	$('#nav-mine').on('click', function(evt) {
 		hideElements();
-		evt.preventDefault();
+		// evt.preventDefault();
 		if (currentUser) {
+			$allStoriesList.hide();
+			$('#my-articles').empty();
 			$('#my-articles').slideToggle();
 			$('#nav-mine').show();
 		}
@@ -207,16 +211,18 @@ $(async function() {
    */
 
 	$('.fa-heart').on('click', async function(evt) {
-		evt.preventDefault();
-		const hrtElement = evt.target;
-		const favStory = evt.target.closest('li');
+		if (currentUser) {
+			evt.preventDefault();
+			const hrtElement = evt.target;
+			const favStory = evt.target.closest('li');
 
-		if ($(hrtElement).hasClass('far')) {
-			await currentUser.addFavorite(favStory.id);
-			$(hrtElement).toggleClass('far fas');
-		} else {
-			await currentUser.removeFavorite(favStory.id);
-			$(hrtElement).toggleClass('fas far');
+			if ($(hrtElement).hasClass('far')) {
+				await currentUser.addFavorite(favStory.id);
+				$(hrtElement).toggleClass('far fas');
+			} else {
+				await currentUser.removeFavorite(favStory.id);
+				$(hrtElement).toggleClass('fas far');
+			}
 		}
 	});
 
@@ -227,34 +233,40 @@ $(async function() {
 
 	// Got idea to use function to determine correct class for HTML rendering from key
 	function isFavorite(story) {
-		if (currentUser.favorites.length === 0) {
-			return 'far';
-		}
-		for (favStory of currentUser.favorites) {
-			if (favStory.storyId === story.storyId) {
-				return 'fas';
+		if (currentUser) {
+			if (currentUser.favorites.length === 0) {
+				return 'far';
 			}
-			return 'far';
+			for (favStory of currentUser.favorites) {
+				if (favStory.storyId === story.storyId) {
+					return 'fas';
+				}
+				return 'far';
+			}
 		}
 	}
 
 	function isOwn(story) {
-		if (currentUser.ownStories.length === 0) {
+		if (currentUser) {
+			if (currentUser.ownStories.length === 0) {
+				return false;
+			}
+			for (chosenStory of currentUser.ownStories) {
+				if (chosenStory.storyId === story.storyId) {
+					return true;
+				}
+			}
 			return false;
 		}
-		for (chosenStory of currentUser.ownStories) {
-			if (chosenStory.storyId === story.storyId) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	function generateStoryHTML(story, context) {
 		let hostName = getHostName(story.url);
 		let favClass = isFavorite(story);
 
-		if (isOwn(story) && context === 'filter') {
+		if (!currentUser) {
+			iconClass = 'far fa-heart';
+		} else if (isOwn(story) && context === 'filter') {
 			iconClass = 'fas fa-trash';
 		} else {
 			iconClass = `${favClass} fa-heart`;
@@ -287,7 +299,8 @@ $(async function() {
 			$filteredArticles,
 			$ownStories,
 			$loginForm,
-			$createAccountForm
+			$createAccountForm,
+			$('#favorited-articles')
 		];
 		elementsArr.forEach(($elem) => $elem.hide());
 	}
