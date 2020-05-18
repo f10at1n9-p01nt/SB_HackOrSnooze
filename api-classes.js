@@ -164,6 +164,25 @@ class User {
 		return existingUser;
 	}
 
+	async retrieveDetails() {
+		const response = await axios.get(`${BASE_URL}/users/${this.username}`, {
+			params: {
+				token: this.loginToken
+			}
+		});
+
+		// update all of the user's properties from the API response
+		this.name = response.data.user.name;
+		this.createdAt = response.data.user.createdAt;
+		this.updatedAt = response.data.user.updatedAt;
+
+		// remember to convert the user's favorites and ownStories into instances of Story
+		this.favorites = response.data.user.favorites.map((s) => new Story(s));
+		this.ownStories = response.data.user.stories.map((s) => new Story(s));
+
+		return this;
+	}
+
 	async addFavorite(storyId) {
 		const response = await axios({
 			method: 'POST',
@@ -173,9 +192,10 @@ class User {
 			}
 		});
 
-		let user = await User.getLoggedInUser(this.loginToken, this.username);
-		console.log(user);
-		return user;
+		// let user = await User.getLoggedInUser(this.loginToken, this.username);
+		await this.retrieveDetails();
+		// console.log(user);
+		// return user;
 	}
 
 	async removeFavorite(storyId) {
@@ -187,8 +207,9 @@ class User {
 			}
 		});
 
-		let user = await User.getLoggedInUser(this.loginToken, this.username);
-		return user;
+		// let user = await User.getLoggedInUser(this.loginToken, this.username);
+		// return user;
+		await this.retrieveDetails();
 	}
 }
 

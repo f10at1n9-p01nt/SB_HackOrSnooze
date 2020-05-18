@@ -97,12 +97,11 @@ $(async function() {
 			$submitForm.slideToggle();
 		}
 	});
-
-	$('#nav-favorite').on('click', function() {
-		console.log('clicked');
+	$('body').on('click', '#nav-favorite', function() {
+		// $('#nav-favorite').on('click', function() {
 		hideElements();
 		if (currentUser) {
-			$('#favorited-articles').slideToggle();
+			// $('#favorited-articles').slideToggle();
 			$('#favorited-articles').empty();
 			for (let story of currentUser.favorites) {
 				$('#favorited-articles').append(generateStoryHTML(story));
@@ -224,7 +223,8 @@ $(async function() {
 		}
 	});
 
-	$('.fa-trash').on('click', async function(evt) {
+	$('.articles-container').on('click', '.fa-trash', async function(evt) {
+		// $('.fa-trash').on('click', async function(evt) {
 		evt.preventDefault();
 		console.log(evt);
 	});
