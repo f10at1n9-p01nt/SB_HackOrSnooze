@@ -74,7 +74,6 @@ $(async function() {
 
 	$navLogin.on('click', function() {
 		// Show the Login and Create Account Forms
-		console.log('this sucks');
 		$loginForm.slideToggle();
 		$createAccountForm.slideToggle();
 		$allStoriesList.toggle();
@@ -91,8 +90,8 @@ $(async function() {
 	});
 
 	// Event handler for clicking submit link in nav bar
-	$('#nav-submit').on('click', function(evt) {
-		evt.preventDefault();
+	$('#nav-submit').on('click', function() {
+		// evt.preventDefault();
 		if (currentUser) {
 			hideElements();
 			$submitForm.slideToggle();
@@ -100,16 +99,15 @@ $(async function() {
 	});
 
 	$('#nav-favorite').on('click', function() {
-		// evt.preventDefault();
+		console.log('clicked');
 		hideElements();
 		if (currentUser) {
 			$('#favorited-articles').slideToggle();
-			$allStoriesList.hide();
-			$('#favorited-articles').show();
 			$('#favorited-articles').empty();
-			for (story of currentUser.favorites) {
+			for (let story of currentUser.favorites) {
 				$('#favorited-articles').append(generateStoryHTML(story));
 			}
+			$('#favorited-articles').show();
 		}
 	});
 
@@ -241,8 +239,8 @@ $(async function() {
 				if (favStory.storyId === story.storyId) {
 					return 'fas';
 				}
-				return 'far';
 			}
+			return 'far';
 		}
 	}
 
