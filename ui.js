@@ -207,8 +207,8 @@ $(async function() {
 	/**
    * A function to render HTML for an individual Story instance
    */
-
-	$('.fa-heart').on('click', async function(evt) {
+	$('.articles-container').on('click', '.fa-heart', async function(evt) {
+		// $('.fa-heart').on('click', async function(evt) {
 		if (currentUser) {
 			evt.preventDefault();
 			const hrtElement = evt.target;
