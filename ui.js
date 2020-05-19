@@ -232,6 +232,10 @@ $(async function() {
 			console.log(evt);
 			const deleteStory = evt.target.closest('li');
 			await storyList.deleteStory(currentUser, deleteStory.id);
+
+			await generateStories();
+			hideElements();
+			$allStoriesList.show();
 		}
 	});
 
