@@ -90,10 +90,10 @@ $(async function() {
 	});
 
 	// Event handler for clicking Submit in nav bar
-	$('#nav-submit').on('click', function() {
+	$('body').on('click', '#nav-submit', function() {
 		// evt.preventDefault();
 		if (currentUser) {
-			hideElements();
+			// hideElements();
 			$submitForm.slideToggle();
 		}
 	});
