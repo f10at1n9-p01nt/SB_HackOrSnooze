@@ -61,6 +61,25 @@ class StoryList {
 
 		return newStory;
 	}
+
+	async deleteStory(user, storyId) {
+		const response = await axios({
+			method: 'DELETE',
+			url: `${BASE_URL}/stories/${storyId}`,
+			data: {
+				token: user.loginToken
+			}
+		});
+
+		// Remove story from user and story list
+		user.ownStories = user.ownStories.filter(function(obj) {
+			return obj.storyId !== storyId;
+		});
+
+		this.stories = this.stories.filter(function(obj) {
+			return obj.storyId !== storyId;
+		});
+	}
 }
 
 /**

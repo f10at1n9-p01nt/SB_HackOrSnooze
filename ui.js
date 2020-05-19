@@ -89,7 +89,7 @@ $(async function() {
 		$allStoriesList.show();
 	});
 
-	// Event handler for clicking submit link in nav bar
+	// Event handler for clicking Submit in nav bar
 	$('#nav-submit').on('click', function() {
 		// evt.preventDefault();
 		if (currentUser) {
@@ -97,6 +97,8 @@ $(async function() {
 			$submitForm.slideToggle();
 		}
 	});
+
+	// Event handler clicking Favorites in nav
 	$('body').on('click', '#nav-favorite', function() {
 		// $('#nav-favorite').on('click', function() {
 		hideElements();
@@ -109,7 +111,7 @@ $(async function() {
 			$('#favorited-articles').show();
 		}
 	});
-
+	// Event handler clicking My Stories in Nav
 	$('#nav-mine').on('click', function(evt) {
 		hideElements();
 		// evt.preventDefault();
@@ -225,8 +227,12 @@ $(async function() {
 
 	$('.articles-container').on('click', '.fa-trash', async function(evt) {
 		// $('.fa-trash').on('click', async function(evt) {
-		evt.preventDefault();
-		console.log(evt);
+		if (currentUser) {
+			evt.preventDefault();
+			console.log(evt);
+			const deleteStory = evt.target.closest('li');
+			await storyList.deleteStory(currentUser, deleteStory.id);
+		}
 	});
 
 	// Got idea to use function to determine correct class for HTML rendering from key
