@@ -59,7 +59,7 @@ class StoryList {
 		newStory = new Story(response.data.story);
 		return newStory;
 	}
-
+	// ! Potential bug - if deleted after favorited, still in favorites
 	async deleteStory(user, storyId) {
 		const response = await axios({
 			method: 'DELETE',
