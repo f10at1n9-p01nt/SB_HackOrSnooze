@@ -53,6 +53,7 @@ $(async function() {
 		let username = $('#create-account-username').val();
 		let password = $('#create-account-password').val();
 
+		// Check if user is in system
 		const checkUser = await axios
 			.post(`${BASE_URL}/login`, {
 				user: {
@@ -60,6 +61,7 @@ $(async function() {
 					password: password
 				}
 			})
+			// if not in system, returns error and new user is created
 			.catch(async function(err) {
 				if (err.response) {
 					// call the create method, which calls the API and then builds a new user instance
@@ -70,9 +72,6 @@ $(async function() {
 					return;
 				}
 			});
-
-		// $('.error-message').toggleClass('hidden', '');
-		// $('.error-message').slideToggle();
 		$('.error-message').text('User already exists!');
 	});
 
@@ -229,7 +228,6 @@ $(async function() {
    * A function to render HTML for an individual Story instance
    */
 	$articlesContainer.on('click', '.fa-heart', async function(evt) {
-		// $('.fa-heart').on('click', async function(evt) {
 		if (currentUser) {
 			evt.preventDefault();
 			const hrtElement = evt.target;
@@ -246,10 +244,8 @@ $(async function() {
 	});
 
 	$articlesContainer.on('click', '.fa-trash', async function(evt) {
-		// $('.fa-trash').on('click', async function(evt) {
 		if (currentUser) {
 			evt.preventDefault();
-			console.log(evt);
 			const deleteStory = evt.target.closest('li');
 			await storyList.deleteStory(currentUser, deleteStory.id);
 

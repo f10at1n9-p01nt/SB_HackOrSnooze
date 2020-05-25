@@ -44,7 +44,7 @@ class StoryList {
    */
 
 	async addStory(user, newStory) {
-		// TODO - Implement this function!
+		// // TODO - Implement this function!
 		// this function should return the newly created story so it can be used in
 		// the script.js file where it will be appended to the DOM
 		const response = await axios({
@@ -57,8 +57,6 @@ class StoryList {
 		});
 
 		newStory = new Story(response.data.story);
-		console.log(newStory);
-
 		return newStory;
 	}
 
