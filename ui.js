@@ -1,11 +1,14 @@
 $(async function() {
 	// cache some selectors we'll be using quite a bit
+	const $body = $('body');
 	const $allStoriesList = $('#all-articles-list');
+	const $articlesContainer = $('.articles-container');
 	const $submitForm = $('#submit-form');
 	const $filteredArticles = $('#filtered-articles');
 	const $loginForm = $('#login-form');
 	const $createAccountForm = $('#create-account-form');
 	const $ownStories = $('#my-articles');
+	const $favoriteArticles = $('#favorited-articles');
 	const $navLogin = $('#nav-login');
 	const $navLogOut = $('#nav-logout');
 
@@ -83,14 +86,14 @@ $(async function() {
    * Event handler for Navigation to Homepage
    */
 
-	$('body').on('click', '#nav-all', async function() {
+	$body.on('click', '#nav-all', async function() {
 		hideElements();
 		await generateStories();
 		$allStoriesList.show();
 	});
 
 	// Event handler for clicking Submit in nav bar
-	$('body').on('click', '#nav-submit', function() {
+	$body.on('click', '#nav-submit', function() {
 		// evt.preventDefault();
 		if (currentUser) {
 			// hideElements();
@@ -99,16 +102,16 @@ $(async function() {
 	});
 
 	// Event handler clicking Favorites in nav
-	$('body').on('click', '#nav-favorite', function() {
+	$body.on('click', '#nav-favorite', function() {
 		// $('#nav-favorite').on('click', function() {
 		hideElements();
 		if (currentUser) {
 			// $('#favorited-articles').slideToggle();
-			$('#favorited-articles').empty();
+			$favoriteArticles.empty();
 			for (let story of currentUser.favorites) {
-				$('#favorited-articles').append(generateStoryHTML(story));
+				$favoriteArticles.append(generateStoryHTML(story));
 			}
-			$('#favorited-articles').show();
+			$favoriteArticles.show();
 		}
 	});
 	// Event handler clicking My Stories in Nav
@@ -208,7 +211,7 @@ $(async function() {
 	/**
    * A function to render HTML for an individual Story instance
    */
-	$('.articles-container').on('click', '.fa-heart', async function(evt) {
+	$articlesContainer.on('click', '.fa-heart', async function(evt) {
 		// $('.fa-heart').on('click', async function(evt) {
 		if (currentUser) {
 			evt.preventDefault();
@@ -225,7 +228,7 @@ $(async function() {
 		}
 	});
 
-	$('.articles-container').on('click', '.fa-trash', async function(evt) {
+	$articlesContainer.on('click', '.fa-trash', async function(evt) {
 		// $('.fa-trash').on('click', async function(evt) {
 		if (currentUser) {
 			evt.preventDefault();
@@ -308,7 +311,7 @@ $(async function() {
 			$ownStories,
 			$loginForm,
 			$createAccountForm,
-			$('#favorited-articles')
+			$favoriteArticles
 		];
 		elementsArr.forEach(($elem) => $elem.hide());
 	}
