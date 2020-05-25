@@ -13,7 +13,7 @@
 
 <body>
   <nav>
-    <b><a class="nav-link navbar-brand" href="#" id="nav-all">Hack or Snooze</a></b>
+    <b><a class="main-nav-link navbar-brand" href="#" id="nav-all">Hack or Snooze</a></b>
     <a href="#" class="nav-link" id="nav-submit">Submit</a>
     <a href="#" class="nav-link" id="nav-favorite">Favorites</a>
     <a href="#" class="nav-link" id="nav-mine">My Stories</a>
@@ -98,7 +98,10 @@
         <label for="create-account-password">password</label>
         <input id="create-account-password" type="password">
       </div>
-      <button type="submit">create account</button>
+      <div>
+        <button type="submit">create account</button>
+        <span class = 'error-message'></span>
+      </div>
     </form>
   </section>
   <section id="user-profile" class="container hidden">

@@ -53,11 +53,27 @@ $(async function() {
 		let username = $('#create-account-username').val();
 		let password = $('#create-account-password').val();
 
-		// call the create method, which calls the API and then builds a new user instance
-		const newUser = await User.create(username, password, name);
-		currentUser = newUser;
-		syncCurrentUserToLocalStorage();
-		loginAndSubmitForm();
+		const checkUser = await axios
+			.post(`${BASE_URL}/login`, {
+				user: {
+					username: username,
+					password: password
+				}
+			})
+			.catch(async function(err) {
+				if (err.response) {
+					// call the create method, which calls the API and then builds a new user instance
+					const newUser = await User.create(username, password, name);
+					currentUser = newUser;
+					syncCurrentUserToLocalStorage();
+					loginAndSubmitForm();
+					return;
+				}
+			});
+
+		// $('.error-message').toggleClass('hidden', '');
+		// $('.error-message').slideToggle();
+		$('.error-message').text('User already exists!');
 	});
 
 	/**
@@ -77,6 +93,7 @@ $(async function() {
 
 	$navLogin.on('click', function() {
 		// Show the Login and Create Account Forms
+		$('.error-message').text('');
 		$loginForm.slideToggle();
 		$createAccountForm.slideToggle();
 		$allStoriesList.toggle();
