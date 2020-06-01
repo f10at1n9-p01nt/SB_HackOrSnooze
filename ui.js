@@ -75,9 +75,7 @@ $(async function() {
 		$('.error-message').text('User already exists!');
 	});
 
-	/**
-   * Log Out Functionality
-   */
+	// Log Out Functionality
 
 	$navLogOut.on('click', function() {
 		// empty out local storage
@@ -86,9 +84,7 @@ $(async function() {
 		location.reload();
 	});
 
-	/**
-   * Event Handler for Clicking Login
-   */
+	// Event Handler for Clicking Login
 
 	$navLogin.on('click', function() {
 		// Show the Login and Create Account Forms
@@ -98,9 +94,7 @@ $(async function() {
 		$allStoriesList.toggle();
 	});
 
-	/**
-   * Event handler for Navigation to Homepage
-   */
+	// Event handler for Navigation to Homepage
 
 	$body.on('click', '#nav-all', async function() {
 		hideElements();
@@ -108,9 +102,8 @@ $(async function() {
 		$allStoriesList.show();
 	});
 
-	// Event handler for clicking Submit in nav bar
+	// Event handler for clicking Submit in Nav Bar
 	$body.on('click', '#nav-submit', function() {
-		// evt.preventDefault();
 		if (currentUser) {
 			// hideElements();
 			$submitForm.slideToggle();
@@ -131,16 +124,14 @@ $(async function() {
 		}
 	});
 	// Event handler clicking My Stories in Nav
-	$('#nav-mine').on('click', function(evt) {
+	$body.on('click', '#nav-mine', function(evt) {
 		hideElements();
-		// evt.preventDefault();
 		if (currentUser) {
 			$allStoriesList.hide();
 			$('#my-articles').empty();
 			$('#my-articles').slideToggle();
 			$('#nav-mine').show();
 		}
-		// $allStoriesList.hide();
 
 		for (story of currentUser.ownStories) {
 			$('#my-articles').append(generateStoryHTML(story, 'filter'));
@@ -161,6 +152,36 @@ $(async function() {
 		$allStoriesList.prepend(markUp);
 		$submitForm.slideToggle();
 		$submitForm.trigger('reset');
+	});
+
+	// Listener on favorite icon
+	$articlesContainer.on('click', '.fa-heart', async function(evt) {
+		if (currentUser) {
+			evt.preventDefault();
+			const hrtElement = evt.target;
+			const favStory = evt.target.closest('li');
+
+			if ($(hrtElement).hasClass('far')) {
+				await currentUser.addFavorite(favStory.id);
+				$(hrtElement).toggleClass('far fas');
+			} else {
+				await currentUser.removeFavorite(favStory.id);
+				$(hrtElement).toggleClass('fas far');
+			}
+		}
+	});
+
+	// LIstener on trash icon
+	$articlesContainer.on('click', '.fa-trash', async function(evt) {
+		if (currentUser) {
+			evt.preventDefault();
+			const deleteStory = evt.target.closest('li');
+			await storyList.deleteStory(currentUser, deleteStory.id);
+
+			await generateStories();
+			hideElements();
+			$allStoriesList.show();
+		}
 	});
 
 	/**
@@ -223,37 +244,6 @@ $(async function() {
 			$allStoriesList.append(result);
 		}
 	}
-
-	/**
-   * A function to render HTML for an individual Story instance
-   */
-	$articlesContainer.on('click', '.fa-heart', async function(evt) {
-		if (currentUser) {
-			evt.preventDefault();
-			const hrtElement = evt.target;
-			const favStory = evt.target.closest('li');
-
-			if ($(hrtElement).hasClass('far')) {
-				await currentUser.addFavorite(favStory.id);
-				$(hrtElement).toggleClass('far fas');
-			} else {
-				await currentUser.removeFavorite(favStory.id);
-				$(hrtElement).toggleClass('fas far');
-			}
-		}
-	});
-
-	$articlesContainer.on('click', '.fa-trash', async function(evt) {
-		if (currentUser) {
-			evt.preventDefault();
-			const deleteStory = evt.target.closest('li');
-			await storyList.deleteStory(currentUser, deleteStory.id);
-
-			await generateStories();
-			hideElements();
-			$allStoriesList.show();
-		}
-	});
 
 	// Got idea to use function to determine correct class for HTML rendering from key
 	function isFavorite(story) {
